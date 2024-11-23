@@ -37,7 +37,7 @@ def main_menu(term):
         "4. Lista",
         "5. Ordenamiento",
         "6. Árbol Binario",
-        "7. Grafos",
+        "7. Rutas",
         "8. Salir...",
     ]
     selected_index = 0

@@ -123,8 +123,8 @@ def window_6(term):
 
 def grafos(term):
     while True:            
-        grafos_consola = GrafosConsola(term)
-        grafos_consola.menu()
+        grafos = RedShinkansenConsola(term)
+        grafos.menu()
         return
 
 # Asocia cada índice a una función específica
