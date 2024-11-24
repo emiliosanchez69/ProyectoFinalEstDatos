@@ -1,99 +1,77 @@
-""
-# Sistema de Gestión del Tren Bala Japonés 🚄
+# Proyecto de Gestión del Tren Bala Japonés
 
-Este proyecto simula diversas operaciones del sistema de gestión del tren bala japonés (Shinkansen). Utiliza estructuras de datos y algoritmos implementados en Python para modelar escenarios como la gestión de pasajeros, estaciones, horarios, y más.
+Este proyecto implementa diversas estructuras de datos y algoritmos en Python, relacionados con la gestión y operación del tren bala japonés. Se usan herramientas de consola y gráficas para representar y manipular datos.
 
----
+## Tecnologías utilizadas
 
-## Características
+- **Python**: Lenguaje de programación base del proyecto.
+- **Blessed**: Biblioteca para manejar interfaces interactivas en la terminal.
+- **Matplotlib**: Para graficar redes y árboles.
+- **NetworkX**: Para la representación de grafos.
 
-1. **Arreglos**
-   - Gestión de horarios de trenes.
-   - Funcionalidades:
-     - Agregar horarios.
-     - Buscar horarios específicos.
-     - Listar todos los horarios disponibles.
+## Estructuras de datos y funcionalidades
 
-2. **Pilas**
-   - Gestión de pasajeros abordando y descendiendo del tren usando pilas.
-   - Funcionalidades:
-     - Agregar pasajero (Push).
-     - Quitar pasajero (Pop).
-     - Ver pasajero en la cima (Peek).
-     - Mostrar todos los pasajeros.
+### 1. Listas Doblemente Ligadas Circulares
+Módulo: `dcll.py`
 
-3. **Colas**
-   - Sistema de gestión de boletos modelado como una cola.
-   - Funcionalidades:
-     - Encolar (agregar un boleto).
-     - Desencolar (procesar un boleto).
-     - Ver el próximo boleto (Peek).
-     - Mostrar todos los boletos.
+- Implementación para manejar estaciones en una línea circular.
+- Operaciones incluidas: agregar, eliminar, avanzar y retroceder estaciones.
 
-4. **Búsqueda Binaria**
-   - Búsqueda eficiente de estaciones usando búsqueda binaria.
-   - Funcionalidades:
-     - Agregar estaciones.
-     - Realizar búsqueda binaria.
-     - Listar todas las estaciones.
+### 2. Grafos
+Módulo: `grafos.py`
 
-5. **Lista Circular Doble**
-   - Gestión de estaciones de la línea Yamanote utilizando una lista circular doblemente enlazada.
-   - Funcionalidades:
-     - Agregar una estación.
-     - Eliminar una estación.
-     - Navegar hacia adelante o atrás entre estaciones.
-     - Mostrar todas las estaciones en orden circular.
+- Representación de redes ferroviarias.
+- Cálculo de rutas mínimas utilizando algoritmos de grafos.
 
-6. **Quicksort**
-   - Ordenamiento eficiente de nombres de estaciones usando el algoritmo Quicksort.
-   - Funcionalidades:
-     - Agregar estaciones.
-     - Ordenar estaciones.
-     - Listar estaciones ordenadas.
+### 3. Pilas
+Módulo: `pila.py`
 
-7. **Árbol Binario**
-   - Gestión de datos de estaciones usando un árbol binario.
-   - Funcionalidades:
-     - Agregar una nueva estación.
-     - Eliminar una estación.
-     - Buscar una estación.
-     - Recorrer el árbol (inorden, preorden, postorden).
-     - Mostrar el árbol en un formato "gráfico" en consola.
+- Representación de pasajeros subiendo y bajando de un tren usando el modelo de pila (LIFO).
 
-8. **Grafos**
-   - Simulación de una red de rutas de tren usando grafos.
-   - Funcionalidades:
-     - Agregar rutas entre estaciones.
-     - Encontrar la ruta más corta basada en criterios como distancia, costo o tiempo.
-     - Visualizar el grafo en la terminal.
+### 4. Colas
+Módulo: `cola.py`
 
----
+- Representación de pasajeros en cola para abordar el tren (FIFO).
 
-## Estructura de Archivos
+### 5. Árboles Binarios
+Módulo: `arboles.py`
 
-- `main.py` - Punto de entrada del programa.
-- `menu_func.py` - Funciones para mostrar y navegar por el menú principal.
-- `window_func.py` - Funciones que conectan las opciones del menú con los módulos específicos.
-- `arboles.py` - Implementación de árboles binarios para gestión de estaciones.
-- `busqbinaria.py` - Implementación de búsqueda binaria.
-- `cola.py` - Implementación de colas para gestión de boletos.
-- `dcll.py` - Lista circular doblemente enlazada para la línea Yamanote.
-- `grafos.py` - Implementación de grafos para gestión de rutas.
-- `header.py` - Gestión de encabezados para una interfaz consistente en la terminal.
-- `pila.py` - Implementación de pilas para gestión de pasajeros.
-- `quicksort.py` - Algoritmo Quicksort para ordenamiento de estaciones.
-- `arreglos.py` - Implementación basada en arreglos para gestión de horarios.
+- Implementación de operaciones básicas en árboles binarios: insertar, eliminar, buscar, y recorridos (preorden, inorden, postorden).
+- Visualización del árbol en la consola.
 
----
+### 6. Algoritmos de Ordenamiento
+Módulo: `quicksort.py`
 
-## Uso
+- Implementación del algoritmo Quicksort para ordenar estaciones.
 
-### Requisitos
+### 7. Búsqueda Binaria
+Módulo: `busqbinaria.py`
 
-- Python 3.7 o superior
-- Biblioteca `blessed` para la interfaz de terminal:
-  ```bash
-  pip install blessed
+- Implementación de la búsqueda binaria para encontrar estaciones en una lista ordenada.
 
-  
+### 8. Arreglos
+Módulo: `arreglos.py`
+
+- Manejo de horarios de trenes con operaciones de búsqueda y ordenamiento.
+
+## Organización de los archivos
+
+- `dcll.py`: Listas Doblemente Ligadas Circulares.
+- `grafos.py`: Implementación y visualización de grafos.
+- `header.py`: Configuración para cabeceras de las interfaces.
+- `pila.py`: Modelo de Pilas.
+- `quicksort.py`: Ordenamiento por Quicksort.
+- `arboles.py`: Árboles binarios.
+- `arreglos.py`: Gestión de horarios con arreglos.
+- `busqbinaria.py`: Algoritmo de búsqueda binaria.
+- `cola.py`: Modelo de Colas.
+- `menu_func.py`: Funcionalidades generales del menú.
+- `window_func.py`: Configuración de ventanas para interfaz gráfica.
+- `main.py`: Archivo principal para ejecutar el programa.
+
+## Ejecución del Proyecto
+
+Para ejecutar el proyecto, se necesita Python instalado en el sistema. Asegúrese de instalar las bibliotecas necesarias:
+
+```bash
+pip install blessed matplotlib networkx
