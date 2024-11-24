@@ -109,3 +109,11 @@ class GestorPasajerosConsola:
             if tecla.name == "KEY_ENTER":
                 break
 
+    def header(self, text, buttons="[BACKSPACE] Volver | [I] Información"):
+        print(self.term.clear())
+        print(self.term.bold(text))
+        print()
+        print(buttons)
+        print("-" * 50)
+        print()
+

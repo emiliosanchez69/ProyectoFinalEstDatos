@@ -111,20 +111,20 @@ class RedShinkansenConsola:
     def agregar_ruta_consola(self):
         # Permite agregar una nueva ruta a la red
         print(self.term.clear())
-        self.header("Opción 7 - Rutas -> Agregar ruta", "[BACKSPACE] Volver")
+        self.header("Rutas -> Agregar ruta", "[BACKSPACE] Volver")
         
         # Seleccionar origen
-        origen = self.seleccionar_estacion("Opción 7 - Rutas -> Agregar ruta -> Selecciona la estación de origen:", self.red.estaciones)
+        origen = self.seleccionar_estacion("Rutas -> Agregar ruta -> Selecciona la estación de origen:", self.red.estaciones)
         if origen is None:
             return  # Cancelado por el usuario
 
         # Seleccionar destino
-        destino = self.seleccionar_estacion("Opción 7 - Rutas -> Agregar ruta -> Selecciona la estación de destino:", self.red.estaciones)
+        destino = self.seleccionar_estacion("Rutas -> Agregar ruta -> Selecciona la estación de destino:", self.red.estaciones)
         if destino is None:
             return  # Cancelado por el usuario
 
         try:
-            self.header("Opción 7 - Rutas -> Agregar ruta", "[BACKSPACE] Volver")
+            self.header("Rutas -> Agregar ruta", "[BACKSPACE] Volver")
             print(f"Origen: {origen}, Destino: {destino}.")
             print()
             distancia = int(self.capturar_texto("Distancia (en km): "))
@@ -148,7 +148,7 @@ class RedShinkansenConsola:
         if not self.red.rutas:
             # Bloquea la operación si no hay rutas
             print(self.term.clear())
-            self.header("Opción 7 - Rutas -> Calcular costo mínimo", "")
+            self.header("Rutas -> Calcular costo mínimo", "")
             print("No hay rutas disponibles para calcular el costo mínimo.")
             self.esperar_enter()
             return
@@ -158,7 +158,7 @@ class RedShinkansenConsola:
 
         while True:
             print(self.term.clear())
-            self.header("Opción 7 - Rutas -> Calcular costo mínimo","[BACKSPACE] Volver")
+            self.header("Rutas -> Calcular costo mínimo","[BACKSPACE] Volver")
             print("Selecciona el criterio para calcular el costo mínimo:")
 
             # Mostrar opciones de criterios
@@ -196,7 +196,7 @@ class RedShinkansenConsola:
     def visualizar_red(self):
         # Muestra la red ferroviaria actual
         print(self.term.clear())
-        self.header("Opción 7 - Rutas -> Visualizar red ferroviaria", "")
+        self.header("Rutas -> Visualizar red ferroviaria", "")
         if not self.red.rutas:
             print("La red ferroviaria está vacía. No hay rutas para visualizar.")
         else:
@@ -208,7 +208,7 @@ class RedShinkansenConsola:
         # Muestra la sección de ayuda
         while True:
             print(self.term.clear())
-            self.header("Opción 7 - Rutas -> Ayuda", buttons="[BACKSPACE] Volver")
+            self.header("Rutas -> Ayuda", buttons="[BACKSPACE] Volver")
             print("1. Agrega una nueva conexión entre estaciones.")
             print("2. Calcula la red ferroviaria más eficiente.")
             print("3. Visualiza todas las conexiones actuales.")
@@ -233,7 +233,7 @@ class RedShinkansenConsola:
         # Muestra la sección de ayuda
         while True:
             print(self.term.clear())
-            self.header("Opción 7 - Rutas -> Ayuda", buttons="[BACKSPACE] Volver")
+            self.header("Rutas -> Ayuda", buttons="[BACKSPACE] Volver")
             print("1. Agrega una nueva conexión entre estaciones.")
             print("2. Calcula la red ferroviaria más eficiente.")
             print("3. Visualiza todas las conexiones actuales.")
@@ -245,7 +245,7 @@ class RedShinkansenConsola:
 
     def menu(self):
         while True:
-            self.header("Opción 7 - Rutas")
+            self.header("Rutas")
             for i, option in enumerate(self.menu_opciones):
                 if i == self.opcion_actual:
                     print(f"> {option}")

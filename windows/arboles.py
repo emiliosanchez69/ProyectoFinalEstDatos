@@ -1,5 +1,6 @@
 from blessed import Terminal
 
+
 class Nodo:
     def __init__(self, valor):
         self.valor = valor
@@ -131,21 +132,24 @@ class ArbolBinarioConsola:
             "Recorrido Preorden",
             "Recorrido Postorden",
             "Graficar Árbol",
-            "Salir",
         ]
         self.opcion_actual = 0
+
+    def header(self, text, buttons="[BACKSPACE] Volver | [ENTER] Seleccionar"):
+        print(self.term.clear())
+        print(self.term.bold(self.term.cyan(text)))
+        print()
+        print(buttons)
+        print("-" * 50)
+        print()
 
     def menu(self):
         with self.term.cbreak(), self.term.hidden_cursor():
             while True:
-                print(self.term.clear())
-                print(self.term.bold("Gestor de Árbol Binario"))
-                print("-" * 40)
+                self.header("Gestor de Árbol Binario")
                 for idx, opcion in enumerate(self.opciones):
-                    if idx == self.opcion_actual:
-                        print(self.term.reverse(opcion))
-                    else:
-                        print(opcion)
+                    prefijo = "> " if idx == self.opcion_actual else "  "
+                    print(f"{prefijo}{opcion}")
                 tecla = self.term.inkey()
                 if tecla.code == self.term.KEY_UP:
                     self.opcion_actual = (self.opcion_actual - 1) % len(self.opciones)
@@ -154,55 +158,42 @@ class ArbolBinarioConsola:
                 elif tecla.name == "KEY_ENTER":
                     if not self.manejar_opcion():
                         break
+                elif tecla.name == "KEY_BACKSPACE":
+                    break
 
     def manejar_opcion(self):
         opcion = self.opciones[self.opcion_actual]
-        if opcion == "Salir":
-            return False
-        elif opcion == "Nuevo Nodo":
+        self.header(f"Opción: {opcion}")
+        if opcion == "Nuevo Nodo":
             valor = self.capturar_texto("Ingrese un valor: ")
             try:
                 self.arbol.nuevo_nodo(int(valor))
-                print()
                 print(f"Nodo {valor} insertado con éxito.")
             except ValueError:
-                print()
                 print("Entrada inválida. Ingrese un número entero.")
         elif opcion == "Borrar Nodo":
             valor = self.capturar_texto("Ingrese el valor a borrar: ")
             try:
                 self.arbol.borrar_nodo(int(valor))
-                print()
                 print(f"Nodo {valor} eliminado (si existía).")
             except ValueError:
-                print()
                 print("Entrada inválida. Ingrese un número entero.")
         elif opcion == "Buscar Nodo":
             valor = self.capturar_texto("Ingrese el valor a buscar: ")
             try:
                 encontrado = self.arbol.buscar_nodo(int(valor))
-                print()
                 print(f"El valor {valor} {'fue encontrado' if encontrado else 'no existe'} en el árbol.")
             except ValueError:
-                print()
                 print("Entrada inválida. Ingrese un número entero.")
         elif opcion == "Recorrido Inorden":
-            resultado = self.arbol.recorrido_inorden()
-            print()
-            print("Recorrido Inorden:", resultado)
+            print("Recorrido Inorden:", self.arbol.recorrido_inorden())
         elif opcion == "Recorrido Preorden":
-            print()
-            resultado = self.arbol.recorrido_preorden()
-            print("Recorrido Preorden:", resultado)
+            print("Recorrido Preorden:", self.arbol.recorrido_preorden())
         elif opcion == "Recorrido Postorden":
-            print()
-            resultado = self.arbol.recorrido_postorden()
-            print("Recorrido Postorden:", resultado)
+            print("Recorrido Postorden:", self.arbol.recorrido_postorden())
         elif opcion == "Graficar Árbol":
-            print()
-            grafico = self.arbol.graficar()
             print("\nÁrbol Binario:")
-            print(grafico)
+            print(self.arbol.graficar())
         self.esperar_enter()
         return True
 
