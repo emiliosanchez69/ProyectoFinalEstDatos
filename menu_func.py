@@ -31,14 +31,15 @@ def main_menu(term):
 
     #N. OPCION
     menu_options = [
-        "1. Arreglos",
-        "2. Pilas",
-        "3. Colas",
-        "4. Lista",
-        "5. Ordenamiento",
-        "6. Árbol Binario",
-        "7. Rutas",
-        "8. Salir...",
+        "1. Horarios",
+        "2. Pilas de pasajeros",
+        "3. Colas de pasajeros",
+        "4. Buscar trenes...",
+        "5. Linea Circular Yamanote",
+        "6. Ordenamiento",
+        "7. Árbol Binario",
+        "8. Grafos de rutas",
+        "9. Salir...",
     ]
     selected_index = 0
 
@@ -70,9 +71,9 @@ def main_menu(term):
         elif key.name == "KEY_UP":
             selected_index = (selected_index - 1) % len(menu_options)
         elif key.name == "KEY_ENTER" or key == "\n":
-            if selected_index == 7: #INPUT PARA SALIR
+            if selected_index == 8: #INPUT PARA SALIR
                 print(term.clear() + "Saliendo del programa...")
-                time.sleep(3)
+                time.sleep(2)
                 break
             else:
                 window(selected_index, term)

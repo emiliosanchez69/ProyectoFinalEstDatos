@@ -1,134 +1,66 @@
 import time
 from windows.grafos import *
+from windows.arboles import *
+from windows.dcll import *
+from windows.busqbinaria import *
+from windows.quicksort import *
+from windows.pila import * 
+from windows.arreglos import * 
+
 from windows.header import header #encabezado de ventanas
 
 #FUNCIONES PARA CADA TEMA
 
-def arreglos(term):
-
+def arreglos(term): #arreglos -> horarios
     while True:
-        
-        header("Opción 1: Arreglos", term)
-        
-        #aqui va el codigo
-        print("ARREGLOS")
+       arreglos = GestorHorariosConsola(term)
+       arreglos.menu()
+       return
 
-        key = term.inkey()
-        #funcion para desactivar
-        if key.name == "KEY_BACKSPACE": #vuelve al menu
-            return
-        elif key.lower() == "i":
-            while True:
-                header("Opción 1: Arreglos > Información", term, buttons="[BACKSPACE] Cerrar esta ventana")
-                print("Los arreglos son estructuras de datos lineales.")
-                key = term.inkey()
-                if key.name == "KEY_BACKSPACE":
-                    break
-
-
-def window_2(term):
+def pila(term): #pilas -> pasajeros LISTO
     while True:
-        header("Opción 2: Pilas", term)
-        
-        #aqui va el codigo
-        print("Aquí iría todo el contenido relacionado con 'Alright'.")
+        pila = GestorPasajerosConsola(term)
+        pila.menu()
+        return
 
-        key = term.inkey()
-        if key.name == "KEY_BACKSPACE":
-            return
-        elif key.lower() == "i":
-            while True:
-                header("Opción 2: Pilas > Información", term, buttons="[BACKSPACE] Cerrar esta ventana")
-                print("Las pilas son estructuras LIFO (Last In, First Out).")
-                key = term.inkey()
-                if key.name == "KEY_BACKSPACE":
-                    break
-
-
-def window_3(term):
+def cola(term): #colas -> tickets LISTO
     while True:
-        header("Opción 3: Colas", term)
-        
-        #aqui va el codigo
-        print("Aquí iría todo el contenido relacionado con 'DNA.'.")
+        cola = GestorPasajerosConsola(term)
+        cola.menu()
+        return
 
-        key = term.inkey()
-        if key.name == "KEY_BACKSPACE":
-            return
-        elif key.lower() == "i":
-            while True:
-                header("Opción 3: Colas > Información", term, buttons="[BACKSPACE] Cerrar esta ventana")
-                print("Las colas son estructuras FIFO (First In, First Out).")
-                key = term.inkey()
-                if key.name == "KEY_BACKSPACE":
-                    break
-
-
-def window_4(term):
+def busqbinaria(term): #busqueda binaria LISTO
     while True:
-        header("Opción 4: Lista", term)
+        busqbinaria = TrenBalaBusquedaBinaria(term)
+        busqbinaria.menu()
+        return
 
-        #aqui va el codigo
-        print("Aquí iría todo el contenido relacionado con 'King Kunta'.")
-
-        key = term.inkey()
-        if key.name == "KEY_BACKSPACE":
-            return
-        elif key.lower() == "i":
-            while True:
-                header("Opción 4: Lista > Información", term, buttons="[BACKSPACE] Cerrar esta ventana")
-                print("Las listas son estructuras dinámicas de datos.")
-                key = term.inkey()
-                if key.name == "KEY_BACKSPACE":
-                    break
-
-
-def window_5(term):
+def yamanote(term): #lista dcll LISTO
     while True:
-        header("Opción 5: Ordenamiento", term)
+        yamanote = LineaYamanoteConsola(term)
+        yamanote.menu()
+        return
 
-        #aqui va el codigo
-        print("Aquí iría todo el contenido relacionado con 'Swimming Pools (Drank)'.")
-
-        key = term.inkey()
-        if key.name == "KEY_BACKSPACE":
-            return
-        elif key.lower() == "i":
-            while True:
-                header("Opción 5: Ordenamiento > Información", term, buttons="[BACKSPACE] Cerrar esta ventana")
-                print("El ordenamiento organiza los datos en un orden específico.")
-                key = term.inkey()
-                if key.name == "KEY_BACKSPACE":
-                    break
-
-
-def window_6(term):
+def quicksort(term): #LISTO
     while True:
-        header("Opción 6: Árbol Binario", term)
+        quicksort = TrenBalaQuicksort(term)
+        quicksort.menu()
+        return
 
-        #aqui va el codigo
-        print("Aquí iría todo el contenido relacionado con 'm.A.A.d city'.")
-
-        key = term.inkey()
-        if key.name == "KEY_BACKSPACE":
-            return
-        elif key.lower() == "i":
-            while True:
-                header("Opción 6: Árbol Binario > Información", term, buttons="[BACKSPACE] Cerrar esta ventana")
-                print("Los árboles binarios son estructuras jerárquicas.")
-                key = term.inkey()
-                if key.name == "KEY_BACKSPACE":
-                    break
-
-
-def grafos(term):
+def arboles(term): #arbol listo
     while True:            
-        grafos = RedShinkansenConsola(term)
+        arboles = ArbolBinarioConsola(term)
+        arboles.menu()
+        return
+
+def grafos(term): #GRAFOS LISTO
+    while True:            
+        grafos = GrafosConsola(term)
         grafos.menu()
         return
 
 # Asocia cada índice a una función específica
 def window(option_index, term):
-    windows = [arreglos, window_2, window_3, window_4, window_5, window_6, grafos]
+    windows = [arreglos, pila, cola, busqbinaria, yamanote, quicksort, arboles, grafos]
     if 0 <= option_index < len(windows):
         windows[option_index](term)
