@@ -11,7 +11,7 @@ from windows.header import header #encabezado de ventanas
 
 #FUNCIONES PARA CADA TEMA
 
-def arreglos(term): #arreglos -> horarios
+def horarios(term): #arreglos -> horarios
     while True:
        arreglos = GestorHorariosConsola(term)
        arreglos.menu()
@@ -61,6 +61,6 @@ def grafos(term): #GRAFOS LISTO
 
 # Asocia cada índice a una función específica
 def window(option_index, term):
-    windows = [arreglos, pila, cola, busqbinaria, yamanote, quicksort, arboles, grafos]
+    windows = [horarios, pila, cola, busqbinaria, yamanote, quicksort, arboles, grafos]
     if 0 <= option_index < len(windows):
         windows[option_index](term)

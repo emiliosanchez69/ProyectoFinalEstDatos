@@ -47,21 +47,28 @@ class GestorHorariosConsola:
             "Buscar Horario",
             "Eliminar Horario",
             "Listar Todos los Horarios",
-            "Salir",
         ]
         self.opcion_actual = 0
+
+    def header(self, text, buttons="[BACKSPACE] Volver | [I] Información"):
+        print(self.term.clear())
+        print(self.term.bold(text))
+        print()
+        print(buttons)
+        print("-" * 50)
+        print()
 
     def menu(self):
         with self.term.cbreak(), self.term.hidden_cursor():
             while True:
                 print(self.term.clear())
-                print(self.term.bold(self.term.green("Sistema de Horarios del Tren Bala")))
-                print("-" * 50)
+                self.header("Sistema de Horarios del Tren Bala")
                 for idx, opcion in enumerate(self.opciones):
                     if idx == self.opcion_actual:
-                        print(self.term.reverse(opcion))
+                        print(f"> {opcion}")
                     else:
-                        print(opcion)
+                        print(f"  {opcion}")
+
                 tecla = self.term.inkey()
                 if tecla.code == self.term.KEY_UP:
                     self.opcion_actual = (self.opcion_actual - 1) % len(self.opciones)
@@ -70,12 +77,13 @@ class GestorHorariosConsola:
                 elif tecla.name == "KEY_ENTER":
                     if not self.manejar_opcion():
                         break  # Salir del menú
+                    
+                elif tecla.name == "KEY_BACKSPACE":
+                    break
 
     def manejar_opcion(self):
         opcion = self.opciones[self.opcion_actual]
-        if opcion == "Salir":
-            return False  # Indica que se debe salir del menú
-        elif opcion == "Agregar Horario":
+        if opcion == "Agregar Horario":
             horario = self.capturar_texto("Ingrese el horario (HH:MM): ")
             destino = self.capturar_texto("Ingrese el destino: ")
             self.sistema.agregar_horario(horario, destino)

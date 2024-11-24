@@ -13,3 +13,4 @@ if __name__ == "__main__":
         print(term.normal_cursor)
         print(term.clear())
 
+
