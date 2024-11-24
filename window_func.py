@@ -55,7 +55,7 @@ def arboles(term): #arbol listo
 
 def grafos(term): #GRAFOS LISTO
     while True:            
-        grafos = GrafosConsola(term)
+        grafos = RedShinkansenConsola(term)
         grafos.menu()
         return
 

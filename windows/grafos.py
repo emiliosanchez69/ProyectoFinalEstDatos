@@ -1,62 +1,63 @@
 from blessed import Terminal
 import math
+import matplotlib.pyplot as plt
+import networkx as nx
 
-class Grafos:
-    def __init__(self, vertices):
-        self.V = vertices
-        self.grafo = []
+class RedShinkansen:
+    def __init__(self, estaciones):
+        self.estaciones = estaciones  
+        self.rutas = []
 
-    def addEdge(self, u, v, w):
-        self.grafo.append([u, v, w])
+    def agregar_ruta(self, origen, destino, distancia, costo, tiempo):
+        self.rutas.append({"origen": origen, "destino": destino, "distancia": distancia, "costo": costo, "tiempo": tiempo})
 
-    def find(self, parent, i):
-        if parent[i] != i:
-            parent[i] = self.find(parent, parent[i])
-        return parent[i]
+    def encontrar(self, padre, i):
+        if padre[i] != i:
+            padre[i] = self.encontrar(padre, padre[i])
+        return padre[i]
 
-    def union(self, parent, rank, x, y):
-        if rank[x] < rank[y]:
-            parent[x] = y
-        elif rank[x] > rank[y]:
-            parent[y] = x
+    def unir(self, padre, rango, x, y):
+        if rango[x] < rango[y]:
+            padre[x] = y
+        elif rango[x] > rango[y]:
+            padre[y] = x
         else:
-            parent[y] = x
-            rank[x] += 1
+            padre[y] = x
+            rango[x] += 1
 
-    def Kruskal(self):
-        result = []
+    def calcular_kruskal(self, criterio):
+        resultado = []
         i = 0
         e = 0
-        self.grafo = sorted(self.grafo, key=lambda item: item[2])
+        self.rutas = sorted(self.rutas, key=lambda ruta: ruta[criterio])
+        padre = list(range(len(self.estaciones)))
+        rango = [0] * len(self.estaciones)
 
-        parent = list(range(self.V))
-        rank = [0] * self.V
-
-        while e < self.V - 1 and i < len(self.grafo):
-            u, v, w = self.grafo[i]
+        while e < len(self.estaciones) - 1 and i < len(self.rutas):
+            ruta = self.rutas[i]
             i += 1
-            x = self.find(parent, u)
-            y = self.find(parent, v)
+            x = self.encontrar(padre, self.estaciones.index(ruta["origen"]))
+            y = self.encontrar(padre, self.estaciones.index(ruta["destino"]))
 
             if x != y:
                 e += 1
-                result.append([u, v, w])
-                self.union(parent, rank, x, y)
+                resultado.append(ruta)
+                self.unir(padre, rango, x, y)
 
-        costoMinimo = sum([weight for u, v, weight in result])
-        return result, costoMinimo
+        return resultado
 
-class GrafosConsola:
+class RedShinkansenConsola:
     def __init__(self, term):
-        self.grafo = Grafos(7)
-        self.positions = self.calcular_posiciones_nodos()
         self.term = term
-        self.menu_options = [
-            "Agregar destino (arista)",
-            "Calcular costo mínimo (Kruskal)",
-            "Visualizar Grafo",
+        self.red = RedShinkansen(["Tokio", "Osaka", "Kioto", "Nagoya", "Hiroshima", "Fukuoka"])
+        self.menu_opciones = [
+            "Agregar ruta (conexión)",
+            "Calcular costo mínimo (por distancia, costo, o tiempo)",
+            "Visualizar red ferroviaria",
+            "Graficar red ferroviaria",
+            "Graficar MST"
         ]
-        self.current_option = 0
+        self.opcion_actual = 0
 
     def header(self, text, buttons="[BACKSPACE] Volver | [I] Información"):
         print(self.term.clear())
@@ -66,132 +67,209 @@ class GrafosConsola:
         print("-" * 50)
         print()
 
-    def calcular_posiciones_nodos(self):
-        positions = {}
-        radius = 10
-        center_x, center_y = 20, 10
-        for i in range(self.grafo.V):
-            angle = 2 * math.pi * i / self.grafo.V
-            x = round(center_x + radius * math.cos(angle))
-            y = round(center_y + radius * math.sin(angle))
-            positions[i] = (x, y)
-        return positions
-
-    def agregar_arista(self):
-        try:
-            print(self.term.clear())
-            self.header("Opción 8 - Grafos -> Agregar destino (arista)", "")
-            print("Ingresa los datos de la nueva arista:")
-            print("Origen (0-6): ", end="", flush=True)
-            u = int(self.capturar_numero(0, 6))
-
-            print("\nDestino (0-6): ", end="", flush=True)
-            v = int(self.capturar_numero(0, 6))
-
-            print("\nPeso de la arista: ", end="", flush=True)
-            w = int(self.capturar_numero(0, 1000))
-
-            if u == v:
-                print("Error: No se pueden agregar bucles.")
-                self.esperar_enter()
-                return
-
-            self.grafo.addEdge(u, v, w)
-            print(f"\nArista {u} -- {v} con peso {w} agregada correctamente.")
-            self.esperar_enter()
-
-        except ValueError:
-            print("Error: Entrada inválida.")
-            self.esperar_enter()
-
-    def capturar_numero(self, min_val, max_val):
-        numero = ""
-        while True:
-            key = self.term.inkey()
-            if key.is_sequence and key.name == "KEY_ENTER":
-                if numero.isdigit() and min_val <= int(numero) <= max_val:
-                    return int(numero)
-                else:
-                    print(f"\nPor favor, ingresa un número válido entre {min_val} y {max_val}: ", end="", flush=True)
-                    numero = ""
-            elif key.is_sequence and key.name == "KEY_BACKSPACE":
-                numero = numero[:-1]
-            elif key.isdigit():
-                numero += key
-                print(key, end="", flush=True)
-
-    def esperar_enter(self): # corregir
+    def esperar_enter(self):
         print("\nPresiona Enter para continuar...", end="", flush=True)
         while True:
             key = self.term.inkey()
             if key.name == "KEY_ENTER" or key == "\n":
                 break
 
-    def calcularKruskal(self):
-        result, cost = self.grafo.Kruskal()
+    def seleccionar_estacion(self, prompt, estaciones):
+        opciones = self.red.estaciones
+        seleccion = 0
+        while True:
+            print(self.term.clear())
+            self.header(prompt)
+            for idx, estacion in enumerate(opciones):
+                line = "> " + estacion if idx == seleccion else "  " + estacion
+                print(line)
+            key = self.term.inkey()
+            if key.name == "KEY_DOWN" and seleccion < len(opciones) - 1:
+                seleccion += 1
+            elif key.name == "KEY_UP" and seleccion > 0:
+                seleccion -= 1
+            elif key.name == "KEY_ENTER":
+                return opciones[seleccion]
+            elif key.name == "KEY_BACKSPACE":
+                return None
+            
+    def capturar_texto(self, prompt=""):
+        # Captura texto del usuario en modo terminal interactiva
+        print(prompt, end="", flush=True)
+        buffer = ""
+        while True:
+            key = self.term.inkey()
+            if key.name == "KEY_ENTER" or key == "\n":
+                return buffer.strip()
+            elif key.name == "KEY_BACKSPACE":
+                buffer = buffer[:-1]
+                print(f"\r{prompt}{buffer}{' ' * 10}\r{prompt}{buffer}", end="", flush=True)
+            elif key.isprintable():
+                buffer += key
+                print(key, end="", flush=True)
+
+    def agregar_ruta_consola(self):
+        # Permite agregar una nueva ruta a la red
         print(self.term.clear())
-        self.header("Opción 8 - Grafos -> Calcular costo mínimo (Kruskal)", "")
-        print(f"Costo total del MST: {cost}")
-        for u, v, w in result:
-            print(f"Arista {u} -- {v} con peso {w}")
+        self.header("Opción 7 - Rutas -> Agregar ruta", "[BACKSPACE] Volver")
+        
+        # Seleccionar origen
+        origen = self.seleccionar_estacion("Opción 7 - Rutas -> Agregar ruta -> Selecciona la estación de origen:", self.red.estaciones)
+        if origen is None:
+            return  # Cancelado por el usuario
+
+        # Seleccionar destino
+        destino = self.seleccionar_estacion("Opción 7 - Rutas -> Agregar ruta -> Selecciona la estación de destino:", self.red.estaciones)
+        if destino is None:
+            return  # Cancelado por el usuario
+
+        try:
+            self.header("Opción 7 - Rutas -> Agregar ruta", "[BACKSPACE] Volver")
+            print(f"Origen: {origen}, Destino: {destino}.")
+            print()
+            distancia = int(self.capturar_texto("Distancia (en km): "))
+            print()
+            costo = int(self.capturar_texto("Costo (en yenes): "))
+            print()
+            tiempo = int(self.capturar_texto("Tiempo (en minutos): "))
+            print()
+
+            if origen == destino:
+                print("Error: Origen y destino no pueden ser iguales.")
+            else:
+                self.red.agregar_ruta(origen, destino, distancia, costo, tiempo)
+                print(f"\nRuta agregada: {origen} -> {destino}, {distancia} km, {costo} yenes, {tiempo} minutos.")
+        except ValueError:
+            print("\nError: Entrada inválida.")
         self.esperar_enter()
 
-    def visualizar_grafo(self): #corregir
-        print(self.term.clear())
-        self.header("Opción 8 - Grafos -> Visualizar Grafo", "")
-        if not self.grafo.grafo:
-            print("El grafo está vacío. No hay nada que visualizar.")
+    def calcular_costo_minimo(self):
+        # Calcula el costo mínimo usando un criterio especificado
+        if not self.red.rutas:
+            # Bloquea la operación si no hay rutas
+            print(self.term.clear())
+            self.header("Opción 7 - Rutas -> Calcular costo mínimo", "")
+            print("No hay rutas disponibles para calcular el costo mínimo.")
             self.esperar_enter()
             return
 
-        grid_height = 20
-        grid_width = 40
-        grid = [[" " for _ in range(grid_width)] for _ in range(grid_height)]
+        criterios = ["Distancia (km)", "Costo (yenes)", "Tiempo (minutos)"]
+        seleccion = 0
 
-        for node, (x, y) in self.positions.items():
-            if 0 <= x < grid_width and 0 <= y < grid_height:
-                grid[y][x] = str(node)
+        while True:
+            print(self.term.clear())
+            self.header("Opción 7 - Rutas -> Calcular costo mínimo","[BACKSPACE] Volver")
+            print("Selecciona el criterio para calcular el costo mínimo:")
 
-        for row in grid:
-            print("".join(row))
+            # Mostrar opciones de criterios
+            for i, criterio in enumerate(criterios):
+                if i == seleccion:
+                    print(self.term.on_black(self.term.white(f"> {criterio}")))
+                else:
+                    print(f"  {criterio}")
+
+            key = self.term.inkey()
+            if key.name == "KEY_DOWN":
+                seleccion = (seleccion + 1) % len(criterios)
+            elif key.name == "KEY_UP":
+                seleccion = (seleccion - 1) % len(criterios)
+            elif key.name == "KEY_ENTER" or key == "\n":
+                # Asignar la clave del criterio seleccionado
+                if seleccion == 0:
+                    key = "distancia"
+                elif seleccion == 1:
+                    key = "costo"
+                elif seleccion == 2:
+                    key = "tiempo"
+                break
+            elif key.name == "KEY_BACKSPACE":
+                return
+
+        # Calcular y mostrar el costo mínimo usando el criterio seleccionado
+        resultado = self.red.calcular_kruskal(key)
+        print(self.term.clear())
+        self.header(f"Red ferroviaria mínima por {key}")
+        for ruta in resultado:
+            print(f"{ruta['origen']} -> {ruta['destino']}: {ruta[key]}")
         self.esperar_enter()
 
+    def visualizar_red(self):
+        # Muestra la red ferroviaria actual
+        print(self.term.clear())
+        self.header("Opción 7 - Rutas -> Visualizar red ferroviaria", "")
+        if not self.red.rutas:
+            print("La red ferroviaria está vacía. No hay rutas para visualizar.")
+        else:
+            for ruta in self.red.rutas:
+                print(f"{ruta['origen']} -> {ruta['destino']}: {ruta['distancia']} km, {ruta['costo']} yenes, {ruta['tiempo']} minutos")
+        self.esperar_enter()
+
+    def mostrar_ayuda(self):
+        # Muestra la sección de ayuda
+        while True:
+            print(self.term.clear())
+            self.header("Opción 7 - Rutas -> Ayuda", buttons="[BACKSPACE] Volver")
+            print("1. Agrega una nueva conexión entre estaciones.")
+            print("2. Calcula la red ferroviaria más eficiente.")
+            print("3. Visualiza todas las conexiones actuales.")
+            print("4. Salir para cerrar el programa.")
+
+            key = self.term.inkey()
+            if key.name == "KEY_BACKSPACE":
+                break
+
+    def graficar_red(self, mst=False):
+        G = nx.Graph()
+        for ruta in self.red.rutas:
+            G.add_edge(ruta['origen'], ruta['destino'], weight=ruta['distancia'])
+        pos = nx.spring_layout(G)
+        nx.draw(G, pos, with_labels=True, node_color='lightblue')
+        edge_labels = nx.get_edge_attributes(G, 'weight')
+        nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels)
+        plt.title("Red Ferroviaria" if not mst else "MST")
+        plt.show()
+
+    def mostrar_ayuda(self):
+        # Muestra la sección de ayuda
+        while True:
+            print(self.term.clear())
+            self.header("Opción 7 - Rutas -> Ayuda", buttons="[BACKSPACE] Volver")
+            print("1. Agrega una nueva conexión entre estaciones.")
+            print("2. Calcula la red ferroviaria más eficiente.")
+            print("3. Visualiza todas las conexiones actuales.")
+            print("4. Salir para cerrar el programa.")
+
+            key = self.term.inkey()
+            if key.name == "KEY_BACKSPACE":
+                break
+
     def menu(self):
-        with self.term.fullscreen(), self.term.cbreak():
-            while True:
-                self.header("Opción 8 - Grafos")
+        while True:
+            self.header("Opción 7 - Rutas")
+            for i, option in enumerate(self.menu_opciones):
+                if i == self.opcion_actual:
+                    print(f"> {option}")
+                else:
+                    print(f"  {option}")
+            key = self.term.inkey()
+            if key.name == "KEY_DOWN":
+                self.opcion_actual = (self.opcion_actual + 1) % len(self.menu_opciones)
+            elif key.name == "KEY_UP":
+                self.opcion_actual = (self.opcion_actual - 1) % len(self.menu_opciones)
+            elif key.name == "KEY_ENTER":
+                if self.opcion_actual == 0:  # Agregar ruta
+                    self.agregar_ruta_consola()
+                elif self.opcion_actual == 1:  # Calcular costo mínimo
+                    self.calcular_costo_minimo()
+                elif self.opcion_actual == 2:  # Visualizar red
+                    self.visualizar_red()
+                elif self.opcion_actual == 3:  # Graficar red
+                    self.graficar_red()
+                elif self.opcion_actual == 4:  # Graficar MST
+                    self.graficar_red(mst=True)
+            
+            elif key.lower() == "i":
+                    self.mostrar_ayuda()
 
-                print(self.term.move_y(4))
-
-                for i, option in enumerate(self.menu_options):
-                    if i == self.current_option:
-                        print(self.term.on_black(self.term.white(f"> {option}")))
-                    else:
-                        print(f"  {option}")
-
-                key = self.term.inkey()
-                if key.name == "KEY_DOWN":
-                    self.current_option = (self.current_option + 1) % len(self.menu_options)
-                elif key.name == "KEY_UP":
-                    self.current_option = (self.current_option - 1) % len(self.menu_options)
-                elif key.name == "KEY_ENTER" or key == "\n":
-                    if self.current_option == 0:
-                        self.agregar_arista()
-                    elif self.current_option == 1:
-                        self.calcularKruskal()
-                    elif self.current_option == 2:
-                        self.visualizar_grafo()
-
-                elif key.name == "KEY_BACKSPACE":
-                    break
-
-                elif key.lower() == "i":
-                    while True:
-                        self.header("Opción 8: Grafos > Información", buttons="[BACKSPACE] Cerrar esta ventana")
-                        print("1. Agregar una arista entre dos nodos (origen, destino y peso).")
-                        print("2. Calcular el árbol de expansión mínima (MST) usando el algoritmo de Kruskal.")
-                        print("3. Visualizar el grafo como texto ASCII.")
-                        print("4. Salir para cerrar el programa.")
-                        key = self.term.inkey()
-                        if key.name == "KEY_BACKSPACE":
-                            break
+            elif key.name == "KEY_BACKSPACE":
+                break
