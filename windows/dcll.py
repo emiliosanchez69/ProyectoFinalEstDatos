@@ -73,21 +73,26 @@ class LineaYamanoteConsola:
             "Avanzar a Siguiente Estación",
             "Retroceder a Estación Anterior",
             "Mostrar Estaciones",
-            "Salir"
         ]
         self.opcion_actual = 0
 
+    def header(self, text, buttons="[BACKSPACE] Volver | [I] Información"):
+        # Imprime el encabezado para todas las pantallas
+        print(self.term.clear())
+        print(self.term.bold(self.term.green(text)))
+        print()
+        print(buttons)
+        print("-" * 50)
+        print()
+
     def menu(self):
+        # Muestra el menú principal
         with self.term.cbreak(), self.term.hidden_cursor():
             while True:
-                print(self.term.clear())
-                print(self.term.bold(self.term.green("Línea Yamanote - Sistema de Gestión")))
-                print("-" * 40)
+                self.header("Línea Yamanote - Sistema de Gestión")
                 for idx, opcion in enumerate(self.opciones):
-                    if idx == self.opcion_actual:
-                        print(self.term.reverse(opcion))
-                    else:
-                        print(opcion)
+                    prefijo = "> " if idx == self.opcion_actual else "  "
+                    print(f"{prefijo}{opcion}")
                 tecla = self.term.inkey()
                 if tecla.code == self.term.KEY_UP:
                     self.opcion_actual = (self.opcion_actual - 1) % len(self.opciones)
@@ -96,16 +101,20 @@ class LineaYamanoteConsola:
                 elif tecla.name == "KEY_ENTER":
                     if not self.manejar_opcion():
                         break
+                elif tecla.name == "KEY_BACKSPACE":
+                    break
 
     def manejar_opcion(self):
+        # Maneja las opciones seleccionadas en el menú
         opcion = self.opciones[self.opcion_actual]
-        if opcion == "Salir":
-            return False
-        elif opcion == "Agregar Estación":
+        if opcion == "Agregar Estación":
+            self.header("Agregar Estación")
             nombre = self.capturar_texto("Ingrese el nombre de la estación: ")
             self.linea.agregar_estacion(nombre)
+            print()
             print(f"Estación '{nombre}' agregada con éxito.")
         elif opcion == "Eliminar Estación":
+            self.header("Eliminar Estación")
             if self.linea.tamano == 0:
                 print("No hay estaciones para eliminar.")
             else:
@@ -115,23 +124,27 @@ class LineaYamanoteConsola:
                 else:
                     print(f"Estación '{nombre}' no encontrada.")
         elif opcion == "Avanzar a Siguiente Estación":
+            self.header("Avanzar a Siguiente Estación")
             if self.linea.tamano == 0:
                 print("No hay estaciones en la línea.")
             else:
                 self.linea.avanzar()
                 print(f"Ahora en la estación: {self.linea.estacion_actual.nombre}")
         elif opcion == "Retroceder a Estación Anterior":
+            self.header("Retroceder a Estación Anterior")
             if self.linea.tamano == 0:
                 print("No hay estaciones en la línea.")
             else:
                 self.linea.retroceder()
                 print(f"Ahora en la estación: {self.linea.estacion_actual.nombre}")
         elif opcion == "Mostrar Estaciones":
+            self.header("Mostrar Estaciones")
             print(f"Estaciones en la línea: {self.linea.mostrar_estaciones()}")
         self.esperar_enter()
         return True
 
     def capturar_texto(self, mensaje):
+        # Captura texto ingresado por el usuario
         print(self.term.clear() + mensaje, end="", flush=True)
         buffer = ""
         while True:
@@ -146,22 +159,10 @@ class LineaYamanoteConsola:
                 print(tecla, end="", flush=True)
 
     def esperar_enter(self):
+        # Espera a que el usuario presione Enter
         print("\nPresione Enter para continuar...", end="", flush=True)
         while True:
             tecla = self.term.inkey()
             if tecla.name == "KEY_ENTER":
                 break
 
-    def header(self, text, buttons="[BACKSPACE] Volver | [I] Información"):
-        print(self.term.clear())
-        print(self.term.bold(text))
-        print()
-        print(buttons)
-        print("-" * 50)
-        print()
-
-
-if __name__ == "__main__":
-    term = Terminal()
-    consola = LineaYamanoteConsola(term)
-    consola.menu()
