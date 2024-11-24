@@ -75,3 +75,10 @@ Para ejecutar el proyecto, se necesita Python instalado en el sistema. Asegúres
 
 ```bash
 pip install blessed matplotlib networkx
+
+```
+Desarrollado por Emilio J. Sanchez Villalpando.
+ID: 00491563
+Con fines educativos.
+
+
