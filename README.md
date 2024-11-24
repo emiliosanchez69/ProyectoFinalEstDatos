@@ -95,3 +95,5 @@ Este proyecto simula diversas operaciones del sistema de gestión del tren bala 
 - Biblioteca `blessed` para la interfaz de terminal:
   ```bash
   pip install blessed
+
+  
