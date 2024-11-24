@@ -85,6 +85,6 @@ python main.py
 
 Desarrollado por Emilio J. Sanchez Villalpando.\
 ID: 00491563\
-Con fines educativos.\
+Con fines educativos. \
 
 
